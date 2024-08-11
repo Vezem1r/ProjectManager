@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Form</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container">
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          Registration Form
+        </div>
+        <div class="card-body">
+          <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+              {{ field.label_tag }}
+              {{ field }}
+              {% if field.errors %}
+                  <div class="invalid-feedback">
+                      {% for error in field.errors %}
+                          {{ error }}
+                      {% endfor %}
+                  </div>
+              {% endif %}
+              {% if field.label == 'Password confirmation' %}
+                  <div class="invalid-feedback" id="password-mismatch" style="display: none;">Passwords do not match</div>
+              {% endif %}
+              {% if field.label == 'Password' %}
+                  <div class="invalid-feedback" id="password-error" style="display: none;"></div>
+              {% endif %}
+              {% if field.name == 'username' %}
+                  <div id="username-error" class="invalid-feedback" style="display: none;"></div>
+              {% endif %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary btn-block">Register</button>
+          </form>
+        </div>
+        <div class="card-footer">
+          <a href="{% url 'user:login' %}" class="btn btn-link">Already have an account?</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="bg-light text-center py-4 fixed-bottom">
+  <p class="mb-0">AKU0003 Project for SKJ</p>
+</footer>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const password1Input = document.querySelector('#id_password1');
+    const password2Input = document.querySelector('#id_password2');
+    const passwordMismatchDiv = document.querySelector('#password-mismatch');
+    const passwordErrorDiv = document.querySelector('#password-error');
+    const usernameInput = document.querySelector('#id_username');
+    const usernameErrorDiv = document.querySelector('#username-error');
+
+    function checkPasswordMatch() {
+      const password1 = password1Input.value.trim();
+      const password2 = password2Input.value.trim();
+  
+      if (password1 !== password2) {
+        passwordMismatchDiv.style.display = 'block';
+      } else {
+        passwordMismatchDiv.style.display = 'none';
+      }
+    }
+
+    function validatePassword() {
+      const password = password1Input.value.trim();
+  
+      const errors = [];
+  
+      if (password.length < 8) {
+        errors.push('Your password must contain at least 8 characters.');
+      }
+  
+      if (!/\d/.test(password)) {
+        errors.push('Your password must contain at least one digit.');
+      }
+  
+      if (!/[a-zA-Z]/.test(password)) {
+        errors.push('Your password must contain at least one letter.');
+      }
+  
+      if (!/[~!@#$%^&*()_+{}":;'<>?,.\/\\-]/.test(password)) {
+        errors.push('Your password must contain at least one special character.');
+      }
+  
+      if (/\s/.test(password)) {
+        errors.push('Your password can’t contain spaces.');
+      }
+  
+      if (errors.length > 0) {
+        passwordErrorDiv.innerHTML = errors.map(error => `<div>${error}</div>`).join('');
+        passwordErrorDiv.style.display = 'block';
+      } else {
+        passwordErrorDiv.style.display = 'none';
+      }
+    }
+  
+
+    function checkUsernameLength() {
+      const username = usernameInput.value.trim();
+  
+      if (username.length > 20) {
+        usernameErrorDiv.innerHTML = 'Username must be at most 20 characters long.';
+        usernameErrorDiv.style.display = 'block';
+      } else {
+        usernameErrorDiv.style.display = 'none';
+      }
+    }
+
+    password1Input.addEventListener('input', function() {
+      checkPasswordMatch();
+      validatePassword();
+    });
+
+    password2Input.addEventListener('input', checkPasswordMatch);
+
+    usernameInput.addEventListener('input', checkUsernameLength);
+  });
+</script>
+
+</body>
+</html>

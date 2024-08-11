@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Project Management</title>
+</head>
+
+<body>
+  <div>
+    <a href="{% url 'index' %}">Home</a>
+
+    {% block content %}
+    {% endblock %}
+
+  </div>
+
+  <footer>
+    <ul>
+      <li class="nav-item"><a href="{% url 'index' %}">Home</a></li>
+      <li class="nav-item"><a href="{% url 'user:profile' %}">Profile</a></li>
+      <li class="nav-item"><a href="{% url 'user:logout' %}">Logout</a></li>
+      <li class="nav-item"><a href="#">FAQs</a></li>
+      <li class="nav-item"><a href="#">About</a></li>
+    </ul>
+    <p>© 2024 Vanya, Inc</p>
+  </footer>
+</body>
+
+</html>
